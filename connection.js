@@ -42,7 +42,7 @@ function transformSheetData(all) {
  const news=all.news.map(r=>{
   const classes=text(r[3])?text(r[3]).split(',').map(normalizeClass):[];
   if(classes.some(c=>!/^Α[1-5]$/.test(c)))throw Error('Ελέγξτε τα τμήματα της ανακοίνωσης');
-  return {date:sheetDate(r[0]),title:required(r[1]),text:required(r[2]),classes,source:text(r[4]),section:['home','menu','teachers','afterschool','news','calendar','info'].includes(text(r[5]))?text(r[5]):'info'};
+  return {date:sheetDate(r[0]),title:required(r[1]),text:required(r[2]),classes,source:text(r[4]),section:['home','menu','teachers','afterschool','news','calendar','info','registration','regulations','absences'].includes(text(r[5]))?text(r[5]):'info'};
  }).sort((a,b)=>b.date.localeCompare(a.date));
  const events=all.events.map(r=>{const start=sheetDate(r[0]),end=r[3]?sheetDate(r[3]):'';if(end&&end<start)throw Error('Η λήξη προηγείται της έναρξης');return [start,required(r[1]),text(r[2]),end]}).sort((a,b)=>a[0].localeCompare(b[0]));
  const fees=all.fees.map(r=>{if(r[1]===''||!Number.isFinite(Number(r[1]))||Number(r[1])<0)throw Error('Μη έγκυρο ποσό σίτισης');return [required(r[0]),Number(r[1])]});
