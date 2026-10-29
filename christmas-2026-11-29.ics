@@ -1,0 +1,22 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//goneisknip.com//School events//EL
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:christmas-2026-11-29@goneisknip.com
+DTSTAMP:20261029T211353Z
+DTSTART:20261129T130000Z
+DTEND:20261129T160000Z
+SUMMARY:Χριστουγεννιάτικη εκδήλωση
+LOCATION:Κ' Νηπιαγωγείο Λεμεσού (Αγ. Παντελεή
+ μονα)
+DESCRIPTION:Διοργάνωση: Σύνδεσμος Γονέων. Παιχ
+ νίδια\, δραστηριότητες\, κεράσματα και εκ
+ πλήξεις. Περισσότερες λεπτομέρειες σύντ
+ ομα.\nΗ καταχώριση δεν ενημερώνεται αυτό
+ ματα.
+URL:https://goneisknip.com/#calendar
+TRANSP:TRANSPARENT
+END:VEVENT
+END:VCALENDAR

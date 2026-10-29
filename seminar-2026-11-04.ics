@@ -1,0 +1,23 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//goneisknip.com//School events//EL
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:seminar-2026-11-04@goneisknip.com
+DTSTAMP:20261029T211353Z
+DTSTART:20261104T170000Z
+DTEND:20261104T183000Z
+SUMMARY:Σεμινάριο: 3 εργαλεία για καλύτερη επ
+ ικοινωνία με τα παιδιά μας
+LOCATION:Κλειστό θέατρο Κ΄ Δημοτικού
+DESCRIPTION:Εισηγητής: Δρ. Σάββας Τρίχας. Μιλάμ
+ ε\, ακούμε\, συνδεόμαστε! Για καλύτερη επι
+ κοινωνία και σχέση εμπιστοσύνης με τα πα
+ ιδιά μας. Όλοι οι γονείς είναι ευπρόσδεκ
+ τοι.\nΗ καταχώριση δεν ενημερώνεται αυτό
+ ματα.
+URL:https://goneisknip.com/#calendar
+TRANSP:TRANSPARENT
+END:VEVENT
+END:VCALENDAR

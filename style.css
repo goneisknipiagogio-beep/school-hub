@@ -73,3 +73,5 @@ footer{line-height:1.8}
 .deadline-card{background:#fff0d8;border:1px solid #d9af6d;margin-bottom:20px}.deadline-card .eyebrow{color:#6d4b1b}.deadline-card h2{margin-top:10px}.info-section{margin:20px 0}.instruction-list{padding-left:24px}.instruction-list li{margin-bottom:20px}.source-note{font-size:13px;margin:22px 0}.info-section a{overflow-wrap:anywhere}
 
 .lunch-card .lunch-holiday{text-align:center;padding:20px 0}.lunch-card .lunch-holiday h2{max-width:none;margin:0}.lunch-card .lunch-holiday p:empty{display:none}
+
+.calendar-export{margin:14px 0 0;padding:12px 14px;background:var(--paper)}.calendar-export summary{min-height:44px;display:list-item;align-content:center;font-size:14px}.calendar-export-links{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}.calendar-export .muted{font-size:12px;line-height:1.6;margin-top:12px}.calendar-export .btn{max-width:100%;white-space:normal;text-align:center}@media(max-width:480px){.calendar-export-links{display:grid;grid-template-columns:1fr}.calendar-export-links .btn{width:100%;font-size:13px}}
