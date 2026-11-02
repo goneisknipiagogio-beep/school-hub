@@ -76,10 +76,11 @@ async function loadSchoolData() {
   Object.assign(window.SCHOOL_DATA,next);
   schoolDataLive=true;
   if(typeof resetMenuPeriod==='function')resetMenuPeriod();
-  render();status.textContent='Οι πληροφορίες φορτώθηκαν από το σχολικό αρχείο.';
+  render();status.textContent='';
  } catch(e) {
   status.textContent=schoolDataLive?'Δεν ήταν δυνατή η ανανέωση. Εμφανίζονται τα στοιχεία που φορτώθηκαν στην αρχή αυτής της επίσκεψης.':'Δεν ήταν δυνατή η φόρτωση των τελευταίων ενημερώσεων. Εμφανίζεται το αποθηκευμένο αντίγραφο της '+new Date(window.SCHOOL_DATA.updated+'T12:00:00').toLocaleDateString('el-GR')+'.';
   const retry=document.createElement('button');retry.className='btn';retry.textContent='Δοκιμή ξανά';retry.onclick=loadSchoolData;status.appendChild(retry);
   console.warn('School data could not refresh:',e.message);
  } finally {schoolDataLoading=false}
 }
+
