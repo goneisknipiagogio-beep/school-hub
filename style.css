@@ -88,3 +88,5 @@ footer{line-height:1.8}
 
 .announcement-date{display:flex;flex-wrap:wrap;align-items:center;gap:10px}.new-badge{display:inline-block;background:#e8efdf;color:#24594d;border-radius:6px;padding:3px 9px;font-size:12px;font-weight:700;line-height:1.5}
 .data-status:empty{display:none}
+
+.photography-promo{background:#edf2e7}.photography-promo h2{margin-bottom:16px}.sample-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.sample-preview{padding:0;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--paper);cursor:zoom-in}.sample-preview img{display:block;width:100%;height:auto}.sample-preview:focus-visible{outline:3px solid #24594d;outline-offset:4px}.photography-gallery{margin:24px 0}.sample-lightbox{max-width:min(1200px,94vw);max-height:94dvh;padding:14px;border:0;border-radius:16px;background:#fff}.sample-lightbox::backdrop{background:#102b24cc}.sample-lightbox img{display:block;max-width:100%;max-height:calc(90dvh - 75px);width:auto;height:auto;margin:auto;object-fit:contain}.sample-close{display:block;margin:0 0 12px auto}@media(max-width:600px){.sample-grid{grid-template-columns:1fr}.sample-lightbox{padding:10px}}
