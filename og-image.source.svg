@@ -1,13 +1,15 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
   <rect width="1200" height="630" fill="#fbf8f1"/>
   <g fill="#24594d" font-family="Segoe UI, Arial, sans-serif">
-    <text x="320" y="125" font-size="81" font-weight="700">Ενημέρωση</text>
-    <text x="320" y="225" font-size="81" font-weight="700">Γονέων</text>
-    <text x="322" y="300" font-size="38">Κ' Νηπιαγωγείο</text><text x="322" y="348" font-size="38">Λεμεσού</text>
+    <text x="95" y="240" font-size="81" font-weight="700">Ενημέρωση</text>
+    <text x="95" y="330" font-size="81" font-weight="700">Γονέων</text>
+    <text x="97" y="400" font-size="38">Κ' Νηπιαγωγείο Λεμεσού</text>
   </g>
   <!-- The generator replaces this marker with the existing school.svg artwork. -->
   <!-- SCHOOL_ARTWORK -->
 </svg>
+
+
 
 
 

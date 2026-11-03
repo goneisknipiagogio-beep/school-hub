@@ -4,7 +4,7 @@ const fs=require('node:fs/promises'),path=require('node:path'),sharp=require('sh
 async function main(){
  const template=await fs.readFile(path.join(__dirname,'og-image.source.svg'),'utf8');
  const school=await fs.readFile(path.join(__dirname,'school.svg'),'utf8');
- const illustration=school.replace('<svg ','<svg x="560" y="235" width="630" height="362" ');
+ const illustration=school.replace('<svg ','<svg x="515" y="140" width="630" height="362" ');
  const og=template.replace('<!-- SCHOOL_ARTWORK -->',illustration);
  await sharp(Buffer.from(og)).png({compressionLevel:9,palette:true,quality:100}).toFile(path.join(__dirname,'og-image.png'));
  const logo='<svg xmlns="http://www.w3.org/2000/svg" width="180" height="180" viewBox="0 0 180 180"><rect width="180" height="180" rx="38" fill="#e6edda"/><svg x="38" y="38" width="104" height="104" viewBox="0 0 24 24" fill="none" stroke="#24594d" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1 1m12 12 1 1M5 19l1-1M18 6l1-1"/></svg></svg>';
@@ -18,5 +18,7 @@ async function main(){
  }
 }
 main().catch(error=>{console.error(error);process.exitCode=1});
+
+
 
 
