@@ -62,7 +62,9 @@ function initSiteSearch(){
  opener.onclick=()=>{siteSearchIndex=buildSearchIndex();updateSiteSearchResults();dialog.showModal();input.focus()};
  dialog.querySelector('#site-search-close').onclick=()=>dialog.close();
  input.oninput=updateSiteSearchResults;
+ input.onkeydown=event=>{if(event.key==='Escape'){event.preventDefault();dialog.close()}};
  dialog.addEventListener('click',event=>{if(event.target===dialog||event.target.closest('a'))dialog.close()});
  dialog.addEventListener('close',()=>opener.focus({preventScroll:true}));
 }
+
 
