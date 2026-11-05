@@ -34,6 +34,48 @@ function buildSearchIndex(){
 }
 function searchToday(){return new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Nicosia',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date())}
 function searchHolidayQuery(query){return ['αργια','αργιες','διακοπες','argia','argies','diakopes'].some(word=>searchNormal(word)===searchNormal(query))}
+function searchMenuQuery(query){return ['μενου','φαγητο','menou','fagito'].some(word=>searchNormal(word)===searchNormal(query))}
+let searchMenuCache=null;
+function buildSearchMenuIndex(rows,month){
+ const groups=new Map();
+ for(const [day,dish,side]of rows){
+  if(day.slice(0,7)!==month)continue;
+  const title=String(dish).trim(),key=searchNormal(title);
+  if(!key||key===searchNormal('Αργία'))continue;
+  if(!groups.has(key))groups.set(key,{title,type:'Μενού',url:'#menu',menu:true,dates:[],dishWords:key.split(' '),sideWords:[]});
+  const record=groups.get(key);record.dates.push(day);record.sideWords.push(...searchNormal(side||'').split(' ').filter(Boolean));
+ }
+ return [...groups.values()].map(record=>({...record,dates:[...new Set(record.dates)].sort(),sideWords:[...new Set(record.sideWords)]}));
+}
+function getSearchMenuIndex(day=searchToday()){
+ const month=day.slice(0,7);
+ if(!searchMenuCache||searchMenuCache.month!==month||searchMenuCache.source!==D.menu)searchMenuCache={month,source:D.menu,records:buildSearchMenuIndex(D.menu,month)};
+ return searchMenuCache.records;
+}
+function searchMenuDates(record,day=searchToday()){
+ return [...record.dates.filter(value=>value>=day).sort(),...record.dates.filter(value=>value<day).sort().reverse()];
+}
+function findSearchMenuResults(query,index,day=searchToday()){
+ const tokens=searchNormal(query).split(/\s+/).filter(Boolean);if(!tokens.length||searchHolidayQuery(query)||searchMenuQuery(query))return [];
+ const starts=(words,token)=>words.some(word=>word.startsWith(token));
+ return index.filter(record=>record.dates.some(value=>value.slice(0,7)===day.slice(0,7))&&tokens.some(token=>starts(record.dishWords,token))&&tokens.every(token=>starts(record.dishWords,token)||starts(record.sideWords,token)))
+ .map(record=>({...record,target:searchMenuDates(record,day)[0]}))
+ .sort((a,b)=>Number(a.target<day)-Number(b.target<day)||(a.target<day?b.target.localeCompare(a.target):a.target.localeCompare(b.target)))
+ .slice(0,3);
+}
+function searchMenuDateMarkup(record,day=searchToday()){
+ const label=value=>{
+  if(value===day)return 'Σήμερα';
+  if(Date.parse(value+'T00:00:00Z')-Date.parse(day+'T00:00:00Z')===86400000)return 'Αύριο';
+  const d=new Date(value+'T12:00:00Z');return ['Κυ','Δε','Τρ','Τε','Πε','Πα','Σα'][d.getUTCDay()]+' '+d.getUTCDate()+'/'+(d.getUTCMonth()+1);
+ };
+ return '<span class="muted search-menu-dates">'+searchMenuDates(record,day).map(value=>value<day?'<span class="search-menu-past">('+esc(label(value))+')</span>':esc(label(value))).join(' · ')+'</span>';
+}
+function selectSearchMenuWeek(day){
+ menuMonth=day.slice(0,7);menuView='week';
+ week=Math.max(0,menuWeeks().findIndex(days=>days.some(meal=>meal[0]===day)));
+ if(location.hash==='#menu')render();
+}
 function findSearchResults(query,index,day=searchToday()){
  const tokens=searchNormal(query).split(/\s+/).filter(Boolean);if(!tokens.length)return [];
  const holidays=searchHolidayQuery(query);
@@ -66,10 +108,14 @@ function updateSiteSearchResults(){
  const query=input.value.trim();
  const normal=searchNormal(query);if(normal!==searchLastQuery){searchPastExpanded=false;searchLastQuery=normal}
  if(searchNormal(query).length<2){status.textContent='Γράψτε τουλάχιστον 2 χαρακτήρες.';output.innerHTML='';return;}
- const results=findSearchResults(query,siteSearchIndex);
+ const day=searchToday(),menuShortcut=searchMenuQuery(query);
+ const results=findSearchResults(query,siteSearchIndex,day).filter(r=>!menuShortcut||r.url!=='#menu-month');
+ if(menuShortcut)results.unshift({title:'Μενού σίτισης',type:'Μενού',url:'#menu'});
+ const menuResults=findSearchMenuResults(query,getSearchMenuIndex(day),day),count=results.length+menuResults.length;
  const past=results.filter(r=>r.past),hidden=Math.max(0,past.length-3);let pastSeen=0;
- status.textContent=results.length?(results.length===1?'Βρέθηκε 1 αποτέλεσμα.':'Βρέθηκαν '+results.length+' αποτελέσματα.')+(hidden&&!searchPastExpanded?' '+hidden+' παλαιότερα είναι κρυμμένα.':''):'Δεν βρέθηκαν αποτελέσματα. Δοκιμάστε μια άλλη λέξη.';
+ status.textContent=count?(count===1?'Βρέθηκε 1 αποτέλεσμα.':'Βρέθηκαν '+count+' αποτελέσματα.')+(hidden&&!searchPastExpanded?' '+hidden+' παλαιότερα είναι κρυμμένα.':''):'Δεν βρέθηκαν αποτελέσματα. Δοκιμάστε μια άλλη λέξη.';
  output.innerHTML=results.filter(r=>!r.past||++pastSeen<=3||searchPastExpanded).map(r=>'<li'+(r.past?' class="search-result-past"':'')+'><a href="'+esc(r.url)+'"'+(r.shortcut?' data-search-holidays="true"':'')+'><span class="muted">'+esc(r.type)+'</span><strong>'+esc(r.title)+'</strong>'+(r.start?'<span class="muted search-result-date">'+esc(searchDateLabel(r))+'</span>':'')+(r.past?'<span class="search-past-label">Πέρασε</span>':'')+'</a></li>').join('')+(hidden?'<li><button type="button" class="btn search-older" aria-expanded="'+searchPastExpanded+'" aria-controls="site-search-results"'+(searchPastExpanded?' hidden':'')+'>Δείτε παλαιότερες ('+hidden+')</button></li>':'');
+ output.innerHTML+=menuResults.map(r=>'<li><a href="#menu" data-search-menu-date="'+esc(r.target)+'"><span class="muted">Μενού</span><strong>'+esc(r.title)+'</strong>'+searchMenuDateMarkup(r,day)+'</a></li>').join('');
 }
 function initSiteSearch(){
  const opener=document.querySelector('#site-search-open');
@@ -77,7 +123,7 @@ function initSiteSearch(){
  dialog.innerHTML='<div class="search-dialog-head"><h2 id="site-search-heading">Αναζήτηση</h2><button type="button" class="btn" id="site-search-close" aria-label="Κλείσιμο αναζήτησης">Κλείσιμο ×</button></div><label for="site-search-input">Τι ψάχνετε;</label><input id="site-search-input" type="search" maxlength="120" placeholder="π.χ. φωτογράφιση ή fotografisi" autocomplete="off" autocapitalize="off" spellcheck="false" aria-describedby="site-search-help"><p id="site-search-help" class="muted">Αναζητήστε στα ελληνικά, με ή χωρίς τόνους, ή σε Greeklish.</p><p id="site-search-count" class="muted" role="status" aria-live="polite"></p><ul id="site-search-results" class="search-results"></ul>';
  document.body.appendChild(dialog);
  const input=dialog.querySelector('input');
- opener.onclick=()=>{searchPastExpanded=false;siteSearchIndex=buildSearchIndex();updateSiteSearchResults();dialog.showModal();input.focus()};
+ opener.onclick=()=>{searchPastExpanded=false;siteSearchIndex=buildSearchIndex();getSearchMenuIndex();updateSiteSearchResults();dialog.showModal();input.focus()};
  dialog.querySelector('#site-search-close').onclick=()=>dialog.close();
  input.oninput=updateSiteSearchResults;
  dialog.addEventListener('keydown',event=>{
@@ -91,6 +137,7 @@ function initSiteSearch(){
  dialog.addEventListener('click',event=>{
   if(event.target.closest('.search-older')){searchPastExpanded=true;updateSiteSearchResults();dialog.querySelectorAll('.search-result-past a')[3]?.focus();return}
   const link=event.target.closest('a');
+  if(link?.hasAttribute('data-search-menu-date'))selectSearchMenuWeek(link.getAttribute('data-search-menu-date'));
   if(event.target===dialog||link)dialog.close();
   if(link?.hasAttribute('data-search-holidays'))requestAnimationFrame(()=>requestAnimationFrame(()=>document.querySelector('#calendar-important-dates')?.scrollIntoView({block:'start'})));
  });
