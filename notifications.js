@@ -32,7 +32,7 @@
   if(!config().enabled||!config().appId)return '';
   const instructions=ios()&&!standalone();
   return '<section class="card info-section" id="school-notifications"><h2>Ειδοποιήσεις</h2><p>Νέες ανακοινώσεις και υπενθυμίσεις για επιλεγμένες σημαντικές ημερομηνίες, το προηγούμενο απόγευμα.</p>'+
-   (instructions?'<p class="muted">Στο iPhone, προσθέστε πρώτα την ιστοσελίδα στην οθόνη Αφετηρίας και ανοίξτε την από το εικονίδιό της.</p><a href="#info">Οδηγίες προσθήκης στην αρχική οθόνη →</a>':supported()?'<button type="button" class="btn" data-push-toggle>Ενεργοποίηση ειδοποιήσεων</button><p class="muted" data-push-status role="status" aria-live="polite"></p>':'<p class="muted">Οι ειδοποιήσεις δεν υποστηρίζονται σε αυτό το πρόγραμμα περιήγησης. Δοκιμάστε στο Chrome ή στο Safari από την αρχική οθόνη.</p>')+
+   (instructions?'<p class="muted">Στο iPhone, προσθέστε πρώτα την ιστοσελίδα στην οθόνη Αφετηρίας και ανοίξτε την από το εικονίδιό της.</p><a href="#info">Οδηγίες προσθήκης στην αρχική οθόνη →</a>':supported()?'<p class="muted" data-push-status role="status" aria-live="polite"></p><button type="button" class="btn" data-push-toggle>Ενεργοποίηση ειδοποιήσεων</button>':'<p class="muted">Οι ειδοποιήσεις δεν υποστηρίζονται σε αυτό το πρόγραμμα περιήγησης. Δοκιμάστε στο Chrome ή στο Safari από την αρχική οθόνη.</p>')+
    '</section>';
  }
  function paint(){
@@ -40,11 +40,14 @@
   const button=section.querySelector('[data-push-toggle]'),status=section.querySelector('[data-push-status]');if(!button)return;
   const sdk=window.OneSignal,active=!!sdk?.User?.PushSubscription?.optedIn;
   button.disabled=busy;
-  button.textContent=busy?'Σύνδεση…':active?'Απενεργοποίηση ειδοποιήσεων':stored()&&!sdk?'Σύνδεση ειδοποιήσεων…':'Ενεργοποίηση ειδοποιήσεων';
-  status.textContent=lastError||(Notification.permission==='denied'?'Οι ειδοποιήσεις είναι αποκλεισμένες. Μπορείτε να αλλάξετε την άδεια από τις ρυθμίσεις του κινητού ή του προγράμματος περιήγησης.':active?'Οι ειδοποιήσεις είναι ενεργές σε αυτή τη συσκευή.':'');
+  button.className=active?'push-disable':'btn';
+  button.textContent=busy?(active?'Απενεργοποίηση…':'Σύνδεση…'):active?'Απενεργοποίηση':stored()&&!sdk?'Σύνδεση ειδοποιήσεων…':'Ενεργοποίηση ειδοποιήσεων';
+  status.className=active&&!lastError?'push-active-status':'muted';
+  status.textContent=lastError||(Notification.permission==='denied'?'Οι ειδοποιήσεις είναι αποκλεισμένες. Μπορείτε να αλλάξετε την άδεια από τις ρυθμίσεις του κινητού ή του προγράμματος περιήγησης.':active?'✓ Οι ειδοποιήσεις είναι ενεργές':'');
   button.onclick=async()=>{
    if(busy)return;
    if(Notification.permission==='denied'){paint();return}
+   if(active&&!window.confirm('Θέλετε να απενεργοποιήσετε τις ειδοποιήσεις;'))return;
    busy=true;lastError='';paint();
    try{
     if(active){await sdk.User.PushSubscription.optOut();remember(false);await sdk.setConsentGiven(false)}
