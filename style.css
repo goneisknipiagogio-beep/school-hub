@@ -97,3 +97,7 @@ footer{line-height:1.8}
 .search-results .search-menu-dates{margin-top:4px}.search-results .search-menu-dates span{display:inline;font-size:inherit}.search-results .search-menu-past{opacity:.6}
 
 #school-notifications [data-push-status]:empty{display:none}#school-notifications .push-active-status{display:block;background:#edf2e8;color:#24594d;border:1px solid #c4d6c2;border-radius:12px;padding:12px 16px;font-size:16px;font-weight:650;margin:18px 0 4px}#school-notifications .push-disable{display:block;min-height:44px;padding:8px 2px;border:0;border-radius:6px;background:transparent;color:var(--muted);font-size:14px;text-decoration:underline;text-underline-offset:3px}#school-notifications .push-disable:hover{color:var(--green)}#school-notifications .push-disable:disabled{cursor:wait;opacity:.65}
+
+.activity-meta{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:0 0 14px}.activity-status{display:inline-block;padding:4px 10px;border-radius:8px;font-size:12px;font-weight:650;line-height:1.5;background:#edf2e8;color:#24594d}.activity-status.current{background:#f4e3bc;color:#594317}.activity-status.past{background:#eef0ec;color:#59675f}.event>.activity-status{display:table;margin:6px 0 8px}.activity-past{background:#f8f9f6}.activity-past h2,.activity-past>strong{color:var(--muted)}.activity-past.event{padding-left:12px;padding-right:12px;border-radius:10px}.activity-meta .muted{font-size:13px}
+
+.calendar-day.has-event.is-past{background:#f1f2ed;color:var(--muted)}.calendar-day.has-event.is-past .event-dot{opacity:.6}

@@ -95,7 +95,7 @@ function searchDateLabel(result,day=searchToday()){
 }
 function searchCalendarPage(day){
  const events=eventsOnDay(day);
- return head(date(day,{weekday:'long',day:'numeric',month:'long',year:'numeric'}),'Σχολικό ημερολόγιο')+'<section class="card">'+(events.length?events.map(eventCard).join(''):'<p>Δεν υπάρχουν καταχωρισμένες πληροφορίες για αυτή την ημέρα.</p>')+'</section><p><a href="#calendar">Όλο το ημερολόγιο →</a></p>';
+ return head(date(day,{weekday:'long',day:'numeric',month:'long',year:'numeric'}),'Σχολικό ημερολόγιο')+'<section class="card">'+(events.length?events.map(e=>eventCard(e,true)).join(''):'<p>Δεν υπάρχουν καταχωρισμένες πληροφορίες για αυτή την ημέρα.</p>')+'</section><p><a href="#calendar">Όλο το ημερολόγιο →</a></p>';
 }
 let siteSearchIndex=[];
 let searchPastExpanded=false,searchLastQuery='';
