@@ -33,7 +33,7 @@
   const instructions=ios()&&!standalone();
   return '<section class="card info-section" id="school-notifications"><h2>Ειδοποιήσεις</h2><p>Νέες ανακοινώσεις και υπενθυμίσεις για επιλεγμένες σημαντικές ημερομηνίες, το προηγούμενο απόγευμα.</p>'+
    (instructions?'<p class="muted">Στο iPhone, προσθέστε πρώτα την ιστοσελίδα στην οθόνη Αφετηρίας και ανοίξτε την από το εικονίδιό της.</p><a href="#info">Οδηγίες προσθήκης στην αρχική οθόνη →</a>':supported()?'<button type="button" class="btn" data-push-toggle>Ενεργοποίηση ειδοποιήσεων</button><p class="muted" data-push-status role="status" aria-live="polite"></p>':'<p class="muted">Οι ειδοποιήσεις δεν υποστηρίζονται σε αυτό το πρόγραμμα περιήγησης. Δοκιμάστε στο Chrome ή στο Safari από την αρχική οθόνη.</p>')+
-   '<details><summary>Πώς λειτουργούν</summary><p>Η ενεργοποίηση είναι προαιρετική. Η OneSignal διαχειρίζεται τη συνδρομή ειδοποιήσεων αυτής της συσκευής και τεχνικά στοιχεία όπως το πρόγραμμα περιήγησης και η διεύθυνση IP. Δεν χρειάζεται να δώσετε όνομα, email ή στοιχεία παιδιού. Μπορείτε να απενεργοποιήσετε τις ειδοποιήσεις οποτεδήποτε.</p><p><a href="https://onesignal.com/privacy_policy" target="_blank" rel="noopener noreferrer">Πολιτική απορρήτου OneSignal ↗</a></p><p>Η παράδοση εξαρτάται από τη σύνδεση και τις ρυθμίσεις του κινητού σας.</p></details></section>';
+   '</section>';
  }
  function paint(){
   const section=document.querySelector('#school-notifications');if(!section)return;
