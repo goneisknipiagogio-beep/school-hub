@@ -10,7 +10,7 @@ function shortcutCard(){
  let dismissed=shortcutDismissed;try{dismissed=dismissed||localStorage.getItem('school-app-intro-dismissed-v2')==='1'}catch{}
  if(dismissed)return '';
  const title='Η ιστοσελίδα μας, σαν εφαρμογή';
- const text='Προσθέστε την ιστοσελίδα στην αρχική οθόνη για πρόσβαση με ένα πάτημα. Ενεργοποιήστε και τις ειδοποιήσεις για νέες ανακοινώσεις και χρήσιμες υπενθυμίσεις.';
+ const text='Προσθέστε την ιστοσελίδα στην αρχική οθόνη για πρόσβαση με ένα πάτημα. Ενεργοποιήστε και τις <strong>ειδοποιήσεις</strong> για νέες ανακοινώσεις και χρήσιμες υπενθυμίσεις.';
  return '<section class="card shortcut-card" id="home-app-intro" aria-labelledby="home-app-intro-heading"><button type="button" class="shortcut-close" id="shortcut-dismiss" aria-label="Κλείσιμο πρότασης εφαρμογής και ειδοποιήσεων">×</button><h2 id="home-app-intro-heading">'+title+'</h2><p>'+text+'</p><a class="btn" href="#info/app">Δείτε πώς →</a></section>';
 }
 function shortcutInfo(){
