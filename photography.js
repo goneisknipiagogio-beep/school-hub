@@ -5,7 +5,7 @@ const photographySamples=[
 ];
 function photographyAnnouncement(n){return n.title==='Χριστουγεννιάτικη φωτογράφιση · 12 Νοεμβρίου'}
 function announcementId(n){return photographyAnnouncement(n)?photographyId:invitationFor(n)?.id}
-function photographyHomeCard(){return today()>='2026-11-03'&&today()<='2026-11-08'?'<section class="card info-section photography-promo"><h2>Χριστουγεννιάτικη φωτογράφιση · 12 Νοεμβρίου</h2><a class="btn announcement-details" href="#news/'+photographyId+'">Δείτε τα δείγματα →</a></section>':''}
+function photographyHomeCard(){const day=today();if(day<'2026-11-11'||day>'2026-11-12')return '';return '<section class="card info-section photography-promo"><span class="new-badge">'+(day==='2026-11-11'?'Αύριο':'Σήμερα')+'</span><h2>Χριστουγεννιάτικη φωτογράφιση</h2><p>Πέμπτη 12 Νοεμβρίου · Από τις 08:00</p><a class="btn announcement-details" href="#news/'+photographyId+'">Δείτε τα δείγματα και τις πληροφορίες →</a></section>'}
 function photographyEventLink(e){return e[0]==='2026-11-12'&&e[1]==='Χριστουγεννιάτικη φωτογράφιση'?'<p><a href="#news/'+photographyId+'">Δείτε τα δείγματα →</a></p>':''}
 function photographyGallery(n){if(!photographyAnnouncement(n))return '';return '<section class="photography-gallery"><h3>Δείγματα φωτογράφισης</h3><p class="muted">Ενδεικτικές φωτογραφίες από τον φωτογράφο. Πατήστε μια φωτογραφία για μεγέθυνση.</p><div class="sample-grid">'+photographySamples.map((p,i)=>'<button type="button" class="sample-preview" data-photo-sample="'+i+'" aria-label="Μεγέθυνση δείγματος '+(i+1)+'"><img src="'+p.src+'" width="'+p.width+'" height="'+p.height+'" alt="'+p.alt+'" loading="lazy" decoding="async"></button>').join('')+'</div></section>'}
 function bindPhotography(){
