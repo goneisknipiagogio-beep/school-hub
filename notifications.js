@@ -7,6 +7,17 @@
  const standalone=()=>!!navigator.standalone||matchMedia('(display-mode: standalone)').matches;
  const ios=()=>/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
  const supported=()=>typeof isSecureContext!=='undefined'&&isSecureContext&&'serviceWorker'in navigator&&'PushManager'in window&&'Notification'in window;
+ const subscribed=()=>{const sub=window.OneSignal?.User?.PushSubscription;return sdkReady&&Notification.permission==='granted'&&!!sub?.optedIn&&!!sub.id&&!!sub.token};
+ function waitForSubscription(sdk){
+  if(subscribed())return Promise.resolve();
+  return new Promise((resolve,reject)=>{
+   const sub=sdk.User.PushSubscription;
+   const finish=()=>{if(subscribed()){clearTimeout(timer);sub.removeEventListener('change',finish);resolve()}};
+   const timer=setTimeout(()=>{sub.removeEventListener('change',finish);reject(Error('registration-incomplete'))},12000);
+   sub.addEventListener('change',finish);finish();
+  });
+ }
+ async function register(sdk){await sdk.setConsentGiven(true);await sdk.User.PushSubscription.optIn();await waitForSubscription(sdk)}
  function loadSdk(){
   if(sdkPromise)return sdkPromise;
   sdkPromise=new Promise((resolve,reject)=>{
@@ -40,12 +51,12 @@
   window.refreshShortcutIntro?.();
   const section=document.querySelector('#school-notifications');if(!section)return;
   const button=section.querySelector('[data-push-toggle]'),status=section.querySelector('[data-push-status]');if(!button)return;
-  const sdk=window.OneSignal,active=!!sdk?.User?.PushSubscription?.optedIn;
+  const sdk=window.OneSignal,active=subscribed();
   button.disabled=busy;
   button.className=active?'push-disable':'btn';
-  button.textContent=busy?(active?'Απενεργοποίηση…':'Σύνδεση…'):active?'Απενεργοποίηση':stored()&&!sdk?'Σύνδεση ειδοποιήσεων…':'Ενεργοποίηση ειδοποιήσεων';
+  button.textContent=busy?(active?'Απενεργοποίηση…':'Σύνδεση…'):active?'Απενεργοποίηση':sdkReady&&Notification.permission==='default'?'Να επιτρέπονται οι ειδοποιήσεις':stored()&&!sdk?'Σύνδεση ειδοποιήσεων…':'Ενεργοποίηση ειδοποιήσεων';
   status.className=active&&!lastError?'push-active-status':'muted';
-  status.textContent=lastError||(Notification.permission==='denied'?'Οι ειδοποιήσεις είναι αποκλεισμένες. Μπορείτε να αλλάξετε την άδεια από τις ρυθμίσεις του κινητού ή του προγράμματος περιήγησης.':active?'✓ Οι ειδοποιήσεις είναι ενεργές':'');
+  status.textContent=lastError||(Notification.permission==='denied'?'Οι ειδοποιήσεις είναι αποκλεισμένες. Μπορείτε να αλλάξετε την άδεια από τις ρυθμίσεις του κινητού ή του προγράμματος περιήγησης.':active?'✓ Οι ειδοποιήσεις είναι ενεργές':sdkReady&&Notification.permission==='default'?'Πατήστε για να επιτρέψετε τις ειδοποιήσεις σε αυτή τη συσκευή.':'');
   button.onclick=async()=>{
    if(busy)return;
    if(Notification.permission==='denied'){paint();return}
@@ -54,21 +65,24 @@
    try{
     if(active){await sdk.User.PushSubscription.optOut();remember(false);await sdk.setConsentGiven(false)}
     else{
-     remember(true);const ready=await loadSdk();
-     // A fresh tap after SDK loading preserves Safari's direct-user-gesture requirement.
-     if(!window.OneSignal?.Notifications?.permission&&Notification.permission==='default'){
-      busy=false;button.disabled=false;button.textContent='Να επιτρέπονται οι ειδοποιήσεις';
-      status.textContent='Πατήστε για να επιτρέψετε τις ειδοποιήσεις σε αυτή τη συσκευή.';
-      button.onclick=async()=>{try{await ready.Notifications.requestPermission();if(ready.Notifications.permission)await ready.User.PushSubscription.optIn();else{remember(false);await ready.setConsentGiven(false)}}catch{lastError='Δεν ήταν δυνατή η ενεργοποίηση. Δοκιμάστε ξανά.'}paint()};return;
+     remember(true);
+     if(!sdkReady){
+      const ready=await loadSdk();
+      // Keep permission prompting on a fresh tap, even if subscription events repaint the controls.
+      if(Notification.permission==='default')return;
+      await register(ready);
+     }else{
+      // Invoke before the first await so Chrome/Safari retain the direct user gesture.
+      if(Notification.permission==='default')await sdk.Notifications.requestPermission();
+      if(Notification.permission==='granted')await register(sdk);
+      else{remember(false);await sdk.setConsentGiven(false)}
      }
-     await ready.setConsentGiven(true);await ready.User.PushSubscription.optIn();
     }
-   }catch{lastError='Δεν ήταν δυνατή η σύνδεση. Δοκιμάστε ξανά.'}finally{busy=false}
-   paint();
+   }catch{lastError='Η ενεργοποίηση δεν ολοκληρώθηκε. Δοκιμάστε ξανά. Αν δεν εμφανιστεί αίτημα άδειας, ελέγξτε τις ειδοποιήσεις στις ρυθμίσεις του Chrome.'}finally{busy=false;paint()}
   };
  }
  window.notificationCard=card;
- window.schoolNotificationState=()=>({active:sdkReady&&!!window.OneSignal?.User?.PushSubscription?.optedIn,pending:stored()&&!sdkReady&&!sdkFailed&&supported()});
+ window.schoolNotificationState=()=>({active:subscribed(),pending:stored()&&!sdkReady&&!sdkFailed&&supported()});
  window.bindNotifications=paint;
  window.initNotifications=()=>{
   if(!config().enabled||!config().appId||!stored()||!supported())return;
