@@ -1,3 +1,5 @@
+// Update this date whenever items are added or collected.
+const lostPropertyUpdated="2026-11-11";
 const lostPropertyItems=[
  {
   "src": "lost-property-20261111-1.webp",
@@ -29,7 +31,7 @@ const lostPropertyItems=[
 ];
 function lostPropertyHasNew(){return lostPropertyItems.some(item=>announcementIsNew(item.added))}
 function lostPropertyNewLabel(){return lostPropertyHasNew()?'<span class="new-badge">Νέα αντικείμενα</span>':''}
-function lostPropertyPage(){return head('Απολεσθέντα','Μήπως είναι δικό σας; Ζητήστε το από το σχολείο.')+'<section class="card"><div class="sample-grid lost-property-grid">'+lostPropertyItems.map((item,i)=>'<button type="button" class="sample-preview lost-property-preview" data-lost-property="'+i+'" aria-label="Μεγέθυνση φωτογραφίας '+(i+1)+(announcementIsNew(item.added)?' — Νέο αντικείμενο':'')+'">'+(announcementIsNew(item.added)?'<span class="new-badge lost-property-badge">Νέο</span>':'')+'<img src="'+item.src+'" width="'+item.width+'" height="'+item.height+'" alt="'+esc(item.alt)+'" loading="lazy" decoding="async"></button>').join('')+'</div></section>'}
+function lostPropertyPage(){return head('Απολεσθέντα','Μήπως είναι δικό σας; Ζητήστε το από το σχολείο.')+'<p class="muted lost-property-updated">Τελευταία ενημέρωση: <time datetime="'+lostPropertyUpdated+'">'+date(lostPropertyUpdated,{day:"numeric",month:"long",year:"numeric"})+'</time></p><section class="card"><div class="sample-grid lost-property-grid">'+lostPropertyItems.map((item,i)=>'<button type="button" class="sample-preview lost-property-preview" data-lost-property="'+i+'" aria-label="Μεγέθυνση φωτογραφίας '+(i+1)+(announcementIsNew(item.added)?' — Νέο αντικείμενο':'')+'">'+(announcementIsNew(item.added)?'<span class="new-badge lost-property-badge">Νέο</span>':'')+'<img src="'+item.src+'" width="'+item.width+'" height="'+item.height+'" alt="'+esc(item.alt)+'" loading="lazy" decoding="async"></button>').join('')+'</div></section>'}
 function lostPropertyLink(){return '<a class="card feature info-section" href="#lost-property"><h2>Απολεσθέντα</h2>'+lostPropertyNewLabel()+'<p>Μήπως είναι δικό σας; →</p></a>'}
 function bindLostProperty(){
  const buttons=document.querySelectorAll('[data-lost-property]');if(!buttons.length)return;
