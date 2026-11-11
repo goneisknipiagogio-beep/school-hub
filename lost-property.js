@@ -1,21 +1,21 @@
 const lostPropertyItems=[
  {
-  "src": "lost-property-20261103-1.webp",
+  "src": "lost-property-20261111-1.webp",
   "width": 960,
   "height": 1280,
-  "alt": "Μπλε φούτερ με κουκούλα και σχέδιο μπάλας μπάσκετ."
+  "alt": "Κρεμ ζακέτα με κουκούλα, πολύχρωμες καρδιές και γράμματα."
  },
  {
-  "src": "lost-property-20261103-2.webp",
-  "width": 960,
-  "height": 1253,
-  "alt": "Γκρι ζακέτα με κουκούλα και φερμουάρ."
- },
- {
-  "src": "lost-property-20261103-3.webp",
+  "src": "lost-property-20261111-2.webp",
   "width": 960,
   "height": 1280,
-  "alt": "Κόκκινη ζακέτα με κουκούλα και γράμμα S."
+  "alt": "Πράσινο φούτερ με κουκούλα και σχέδιο Boston Celtics."
+ },
+ {
+  "src": "lost-property-20261111-3.webp",
+  "width": 960,
+  "height": 1280,
+  "alt": "Ροζ μεταλλιζέ αμάνικο μπουφάν με φερμουάρ."
  },
  {
   "src": "lost-property-20261103-4.webp",
