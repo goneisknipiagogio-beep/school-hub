@@ -101,3 +101,5 @@ footer{line-height:1.8}
 .activity-meta{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:0 0 14px}.activity-status{display:inline-block;padding:4px 10px;border-radius:8px;font-size:12px;font-weight:650;line-height:1.5;background:#edf2e8;color:#24594d}.activity-status.current{background:#f4e3bc;color:#594317}.activity-status.past{background:#eef0ec;color:#59675f}.event>.activity-status{display:table;margin:6px 0 8px}.activity-past{background:#f8f9f6}.activity-past h2,.activity-past>strong{color:var(--muted)}.activity-past.event{padding-left:12px;padding-right:12px;border-radius:10px}.activity-meta .muted{font-size:13px}
 
 .calendar-day.has-event.is-past{background:#f1f2ed;color:var(--muted)}.calendar-day.has-event.is-past .event-dot{opacity:.6}
+
+.lost-property-preview{position:relative}.lost-property-badge{position:absolute;top:12px;left:12px;z-index:1;box-shadow:0 1px 5px #0002;pointer-events:none}
