@@ -19,6 +19,7 @@ function buildSearchIndex(){
  for(const n of D.news)add(n.title,n.text+' '+date(n.date,{day:'numeric',month:'long',year:'numeric'}),'#news/'+searchNewsId(n),'Ανακοίνωση',{start:n.date,end:n.date});
  for(const e of D.events)add(e[1],date(e[0],{day:'numeric',month:'long',year:'numeric'})+' '+e[2]+(e[3]?' '+date(e[3]):''),'#calendar/'+e[0],'Ημερολόγιο',{start:e[0],end:e[3]||e[0],holiday:e[2]==='Σχολική αργία'||searchNormal(e[1]).includes(searchNormal('διακοπές'))});
  const pages=[
+  ['eΔΕΑ: Βοήθεια για γονείς',edeaHelpPage,'#edea-help','εδεα edea CY Login συγκατάθεση ημιτελές αναντιστοιχία κωδικοί'],
   ['Απουσίες, άφιξη και αποχώρηση',absencesPage,'#absences','απουσία απουσίες καθυστέρηση'],
   ['Το ολοήμερο — ωράριο και σίτιση',afterschool,'#afterschool','πληρωμή πληρωμές κόστος φαγητό σίτιση'],
   ['Οι δασκάλες μας',teacherPage,'#teachers','εκπαιδευτικοί δασκάλα δάσκαλοι επισκέψεις'],
