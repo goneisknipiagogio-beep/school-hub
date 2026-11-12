@@ -43,3 +43,5 @@ function bindLostProperty(){
  dialog.addEventListener('close',()=>opener?.focus({preventScroll:true}));
  buttons.forEach(button=>button.onclick=()=>{const item=lostPropertyItems[Number(button.dataset.lostProperty)];if(!item)return;opener=button;const image=dialog.querySelector('img');image.src=item.src;image.alt=item.alt;dialog.showModal()});
 }
+
+function lostPropertyHomeCard(){return lostPropertyHasNew()?'<section class="card info-section lost-property-promo"><h2>Απολεσθέντα '+lostPropertyNewLabel()+'</h2><p>Μήπως κάποιο είναι δικό σας;</p><a class="btn announcement-details" href="#lost-property">Δείτε τα αντικείμενα →</a></section>':''}
