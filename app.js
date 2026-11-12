@@ -12,7 +12,7 @@ function activityStatus(start,end=start,deadline=false,day=today()){
  return {start,end,past,deadline,kind:past?'past':start===day||ongoing?'current':'upcoming',label:deadline?(past?'Η προθεσμία έληξε':end===day?'Λήγει σήμερα':'Έως '+date(end)):past?'Ολοκληρώθηκε':ongoing?'Σε εξέλιξη':start===day?'Σήμερα':'Προσεχώς'};
 }
 function activityTitle(title){return String(title).split(/[·•]/)[0].normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^\p{L}\p{N}]+/gu,' ').trim()}
-function eventActivity(e){return activityStatus(e[0],e[3]||e[0],/προθεσμι/iu.test(e[1].normalize('NFD').replace(/[\u0300-\u036f]/g,'')))}
+function eventActivity(e){const status=activityStatus(e[0],e[3]||e[0],/προθεσμι/iu.test(e[1].normalize('NFD').replace(/[\u0300-\u036f]/g,'')));if(e[0]==='2026-11-12'&&activityTitle(e[1])===activityTitle('Χριστουγεννιάτικη φωτογράφιση')&&today()>='2026-11-12'){status.past=true;status.kind='past';status.label='Ολοκληρώθηκε'}return status}
 function announcementActivity(n){
  if(n.section==='registration')return activityStatus(REGISTRATION_DEADLINE,REGISTRATION_DEADLINE,true);
  const matches=D.events.filter(e=>activityTitle(e[1])===activityTitle(n.title));
@@ -38,8 +38,8 @@ function afterschool(){return head('Το ολοήμερο','Ωράριο και 
 function announcementIsNew(published){const dayMs=86400000,age=(Date.parse(today()+'T00:00:00Z')-Date.parse(published+'T00:00:00Z'))/dayMs;return Number.isInteger(age)&&age>=0&&age<5}
 function news(){
  const entries=D.news.filter(n=>!location.hash.startsWith('#news/')||searchNewsId(n)===location.hash.slice(6)).map(n=>({n,status:announcementActivity(n)}));
- const group=entry=>!entry.status?1:entry.status.past?2:0;
- entries.sort((a,b)=>group(a)-group(b)||(a.status&&b.status?activityOrder(a.status,b.status):0)||b.n.date.localeCompare(a.n.date));
+ const group=entry=>entry.status?.past?1:0;
+ entries.sort((a,b)=>group(a)-group(b)||(group(a)===0?b.n.date.localeCompare(a.n.date):activityOrder(a.status,b.status))||b.n.date.localeCompare(a.n.date));
  return head('Ανακοινώσεις','Οι ενημερώσεις του σχολείου, συγκεντρωμένες και ευανάγνωστες.')+(entries.length?entries.map(({n,status})=>`<article class="card${status?.past?' activity-past':''}" style="margin-bottom:16px"><div class="announcement-date"><span class="muted">${date(n.date,{day:'numeric',month:'long',year:'numeric'})}</span>${announcementIsNew(n.date)?'<span class="new-badge">Νέο</span>':''}</div><h2>${esc(n.title)}</h2>${status?`<div class="activity-meta">${activityBadge(status)}${status.deadline?'':`<span class="muted">${esc(activityDate(status))}</span>`}</div>`:''}<p>${esc(n.text)}</p>${photographyGallery(n)}${invitationActions(n)}${['afterschool','teachers','info','registration','regulations','absences','edea-help'].includes(n.section)?`<a class="btn announcement-details" href="#${esc(n.section)}">Περισσότερες πληροφορίες →</a>`:''}</article>`).join(''):'<p class="empty">Δεν υπάρχουν ακόμη ανακοινώσεις.</p>')+'<a class="btn" href="#calendar">Ημερολόγιο & προηγούμενες εκδηλώσεις →</a>';
 }
 

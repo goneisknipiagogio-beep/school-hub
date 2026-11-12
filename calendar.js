@@ -17,8 +17,8 @@ function calendar() {
   const offset = (first.getDay()+6)%7;
   const last = `${calendarMonth}-${count}`;
   const monthEvents = D.events.filter(e => e[0] <= last && (e[3] || e[0]) >= calendarMonth+'-01').sort((a,b)=>activityOrder(eventActivity(a),eventActivity(b)));
-  const upcoming = D.events.filter(e => (e[3] || e[0]) >= today()).sort((a,b)=>a[0].localeCompare(b[0]));
-  const past = D.events.filter(e => (e[3] || e[0]) < today()).sort((a,b)=>(b[3]||b[0]).localeCompare(a[3]||a[0]));
+  const upcoming = D.events.filter(e => !eventActivity(e).past).sort((a,b)=>a[0].localeCompare(b[0]));
+  const past = D.events.filter(e => eventActivity(e).past).sort((a,b)=>(b[3]||b[0]).localeCompare(a[3]||a[0]));
   const selected = selectedCalendarDay ? eventsOnDay(selectedCalendarDay) : [];
   let cells = '<span class="calendar-blank" aria-hidden="true"></span>'.repeat(offset);
   for (let n=1;n<=count;n++) {
