@@ -108,3 +108,31 @@ footer{line-height:1.8}
 
 /* Keep navigation reachable on tablet widths and larger touch-only tablets. */
 @media (min-width:801px) and (max-width:1200px), (min-width:801px) and (hover:none) and (pointer:coarse){body{padding-bottom:calc(90px + env(safe-area-inset-bottom))}nav{position:fixed;left:0;right:0;bottom:0;width:100%;max-width:none;margin:0;border:0;border-top:1px solid var(--line);border-radius:0;padding-bottom:calc(10px + env(safe-area-inset-bottom))}}
+
+.home-daily-grid{display:contents}
+@media (min-width:1201px) and (hover:hover) and (pointer:fine){
+ header{padding:18px 30px}
+ main{max-width:1140px;padding-top:24px}
+ body>nav{position:sticky;top:8px;bottom:auto;max-width:1080px;width:calc(100% - 60px);margin:8px auto 0;padding:6px 12px;gap:8px;border:1px solid var(--line);border-radius:16px;box-shadow:0 4px 16px #243b3508}
+ nav a{flex:1;min-width:0;flex-direction:row;justify-content:center;gap:8px;padding:9px 10px}
+ nav a span{font-size:13px}
+ .hero{grid-template-columns:minmax(0,1fr) 270px;gap:30px;margin-bottom:20px}
+ .hero h1{font-size:38px;max-width:650px;margin:6px 0 10px}
+ .hero .intro{max-width:62ch;margin-bottom:0}
+ .hero-art{justify-self:end}.hero-art img{width:260px;height:150px;max-height:150px;transform:none}
+ .edea-home-notice{padding:22px 26px;margin-bottom:22px}
+ .edea-home-notice p{max-width:75ch}
+ .home-daily-grid{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(0,1fr);gap:20px;align-items:start;margin-bottom:24px}
+ .home-daily-grid>.card{margin:0;min-width:0}
+ .home-daily-grid .lunch-card{min-height:340px;padding:26px}
+ .home-daily-grid .lunch-card h2{font-size:28px;max-width:100%}
+ .home-daily-grid .lunch-icon{right:24px;top:22px;width:46px;height:46px;border-radius:15px}
+ .home-daily-grid .weekly-summary{padding:22px}
+ .weekly-summary h2{font-size:21px;margin-bottom:10px}
+ .weekly-summary .event{padding:12px 0}
+ .weekly-summary .event strong{font-size:15px}
+ .weekly-summary .event p{font-size:13px;line-height:1.55;margin-bottom:8px}
+ .weekly-summary .dateblock{font-size:12px}
+ .section-head{margin-top:24px;margin-bottom:12px}
+ .grid.two{gap:18px}
+}
