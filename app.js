@@ -6,6 +6,7 @@ const dt=s=>new Date(s+'T12:00:00');
 const date=(s,opt={day:'numeric',month:'long'})=>dt(s).toLocaleDateString('el-GR',opt);
 let week=Math.max(0,Math.min(4,D.menu.findIndex(m=>m[0]===today())>=0?Math.floor(D.menu.findIndex(m=>m[0]===today())/5):0));
 function source(){return ''}
+function announcementDocument(n){return n.date==='2026-11-13'&&n.title==='Χριστουγεννιάτικη κλήρωση: προσφορά δώρων και κουπονιών'?'<p><a class="btn announcement-details" href="christmas-raffle-letter-2026.jpg" target="_blank" rel="noopener noreferrer">Δείτε την επιστολή →</a></p>':''}
 function head(title,intro){return `<a class="back" href="#home">← Αρχική</a><h1>${title}</h1><p class="intro">${intro}</p>`}
 function activityStatus(start,end=start,deadline=false,day=today()){
  const past=end<day,ongoing=start<day&&end>=day;
@@ -40,7 +41,7 @@ function news(){
  const entries=D.news.filter(n=>!location.hash.startsWith('#news/')||searchNewsId(n)===location.hash.slice(6)).map(n=>({n,status:announcementActivity(n)}));
  const group=entry=>entry.status?.past?1:0;
  entries.sort((a,b)=>group(a)-group(b)||(group(a)===0?b.n.date.localeCompare(a.n.date):activityOrder(a.status,b.status))||b.n.date.localeCompare(a.n.date));
- return head('Ανακοινώσεις','Οι ενημερώσεις του σχολείου, συγκεντρωμένες και ευανάγνωστες.')+(entries.length?entries.map(({n,status})=>`<article class="card${status?.past?' activity-past':''}" style="margin-bottom:16px"><div class="announcement-date"><span class="muted">${date(n.date,{day:'numeric',month:'long',year:'numeric'})}</span>${announcementIsNew(n.date)?'<span class="new-badge">Νέο</span>':''}</div><h2>${esc(n.title)}</h2>${status?`<div class="activity-meta">${activityBadge(status)}${status.deadline?'':`<span class="muted">${esc(activityDate(status))}</span>`}</div>`:''}<p>${esc(n.text)}</p>${photographyGallery(n)}${invitationActions(n)}${['afterschool','teachers','info','registration','regulations','absences','edea-help'].includes(n.section)?`<a class="btn announcement-details" href="#${esc(n.section)}">Περισσότερες πληροφορίες →</a>`:''}</article>`).join(''):'<p class="empty">Δεν υπάρχουν ακόμη ανακοινώσεις.</p>')+'<a class="btn" href="#calendar">Ημερολόγιο & προηγούμενες εκδηλώσεις →</a>';
+ return head('Ανακοινώσεις','Οι ενημερώσεις του σχολείου, συγκεντρωμένες και ευανάγνωστες.')+(entries.length?entries.map(({n,status})=>`<article class="card${status?.past?' activity-past':''}" style="margin-bottom:16px"><div class="announcement-date"><span class="muted">${date(n.date,{day:'numeric',month:'long',year:'numeric'})}</span>${announcementIsNew(n.date)?'<span class="new-badge">Νέο</span>':''}</div><h2>${esc(n.title)}</h2>${status?`<div class="activity-meta">${activityBadge(status)}${status.deadline?'':`<span class="muted">${esc(activityDate(status))}</span>`}</div>`:''}<p>${esc(n.text)}</p>${announcementDocument(n)}${photographyGallery(n)}${invitationActions(n)}${['afterschool','teachers','info','registration','regulations','absences','edea-help'].includes(n.section)?`<a class="btn announcement-details" href="#${esc(n.section)}">Περισσότερες πληροφορίες →</a>`:''}</article>`).join(''):'<p class="empty">Δεν υπάρχουν ακόμη ανακοινώσεις.</p>')+'<a class="btn" href="#calendar">Ημερολόγιο & προηγούμενες εκδηλώσεις →</a>';
 }
 
 // Parent-facing Ministry guides only: ypp20831c through ypp20831y. Staff material a/b/z is excluded.
