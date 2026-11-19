@@ -1,32 +1,26 @@
 // Update this date whenever items are added or collected.
-const lostPropertyUpdated="2026-11-11";
+const lostPropertyUpdated="2026-11-19";
 const lostPropertyItems=[
  {
-  "src": "lost-property-20261111-1.webp",
-  "added": "2026-11-11",
+  "src": "lost-property-20261119-1.webp",
+  "added": "2026-11-19",
   "width": 960,
   "height": 1280,
-  "alt": "Κρεμ ζακέτα με κουκούλα, πολύχρωμες καρδιές και γράμματα."
+  "alt": "Τζιν μπουφάν με κουμπιά και δύο τσέπες στο μπροστινό μέρος."
  },
  {
-  "src": "lost-property-20261111-2.webp",
-  "added": "2026-11-11",
+  "src": "lost-property-20261119-2.webp",
+  "added": "2026-11-19",
   "width": 960,
   "height": 1280,
-  "alt": "Πράσινο φούτερ με κουκούλα και σχέδιο Boston Celtics."
+  "alt": "Μπορντό ζακέτα με κουκούλα και φερμουάρ."
  },
  {
-  "src": "lost-property-20261111-3.webp",
-  "added": "2026-11-11",
+  "src": "lost-property-20261119-3.webp",
+  "added": "2026-11-19",
   "width": 960,
   "height": 1280,
-  "alt": "Ροζ μεταλλιζέ αμάνικο μπουφάν με φερμουάρ."
- },
- {
-  "src": "lost-property-20261103-4.webp",
-  "width": 960,
-  "height": 1191,
-  "alt": "Φούξια ζακέτα με κουκούλα και σχέδιο στο στήθος."
+  "alt": "Μαύρη ζακέτα Puma με φερμουάρ και λευκές λεπτομέρειες."
  }
 ];
 function lostPropertyHasNew(){return lostPropertyItems.some(item=>announcementIsNew(item.added))}
