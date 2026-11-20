@@ -136,3 +136,6 @@ footer{line-height:1.8}
  .section-head{margin-top:24px;margin-bottom:12px}
  .grid.two{gap:18px}
 }
+
+/* Compact invitation sharing, with an accessible 48px target. */
+.invitation-actions{align-items:flex-start;flex-direction:row}.invitation-actions .calendar-export{flex:1 1 230px;min-width:0}.invitation-actions>p{flex:0 0 48px;width:48px}.invitation-actions .invitation-share{display:inline-flex;width:48px;min-width:48px;height:48px;padding:12px;align-items:center;justify-content:center}.invitation-share .ui-icon{width:22px;height:22px}.share-feedback:empty{display:none}.share-feedback:not(:empty){width:min(280px,75vw);margin-left:auto}.christmas-invitation{display:block;max-width:680px;width:100%;margin:22px auto}.christmas-invitation img{display:block;width:100%;height:auto}.christmas-promo{background:#edf2e7}

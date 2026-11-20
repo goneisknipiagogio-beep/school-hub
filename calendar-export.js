@@ -1,7 +1,7 @@
 // Only these two confirmed events offer calendar export.
 const calendarExportEvents=[
  {date:'2026-11-04',title:'Σεμινάριο: 3 εργαλεία για καλύτερη επικοινωνία με τα παιδιά μας',time:'19:00',durationMinutes:90,location:'Κλειστό θέατρο Κ΄ Δημοτικού',file:'seminar-2026-11-04.ics',uid:'seminar-2026-11-04@goneisknip.com',description:'Εισηγητής: Δρ. Σάββας Τρίχας. Μιλάμε, ακούμε, συνδεόμαστε! Για καλύτερη επικοινωνία και σχέση εμπιστοσύνης με τα παιδιά μας. Όλοι οι γονείς είναι ευπρόσδεκτοι.'},
- {date:'2026-11-29',title:'Χριστουγεννιάτικη εκδήλωση',time:'15:00',durationMinutes:180,location:"Κ' Νηπιαγωγείο Λεμεσού (Αγ. Παντελεήμονα)",file:'christmas-2026-11-29.ics',uid:'christmas-2026-11-29@goneisknip.com',description:'Διοργάνωση: Σύνδεσμος Γονέων. Παιχνίδια, δραστηριότητες, κεράσματα και εκπλήξεις. Περισσότερες λεπτομέρειες σύντομα.'}
+ {date:'2026-11-29',title:'Χριστουγεννιάτικη εκδήλωση',time:'15:00',durationMinutes:180,location:"Κ' Νηπιαγωγείο Λεμεσού (Αγ. Παντελεήμονα)",file:'christmas-2026-11-29.ics',uid:'christmas-2026-11-29@goneisknip.com',description:'Διοργάνωση: Σύνδεσμος Γονέων. Φωταγώγηση του σχολείου, παιχνίδια, δραστηριότητες και δημιουργική απασχόληση. Προς πώληση hot dogs, πίτσα (και νηστίσιμη), ντόνατς, καφές, αναψυκτικά, χυμοί και μπύρα. Επιστροφή της έντυπης δήλωσης συμμετοχής μέχρι τη Δευτέρα 23 Νοεμβρίου.'}
 ];
 function calendarUtcStart(item){
  const [y,m,d]=item.date.split('-').map(Number),[h,min]=item.time.split(':').map(Number);
