@@ -9,6 +9,7 @@
  const ios=()=>/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
  const supported=()=>typeof isSecureContext!=='undefined'&&isSecureContext&&'serviceWorker'in navigator&&'PushManager'in window&&'Notification'in window;
  const permission=()=>typeof Notification==='undefined'?'default':Notification.permission;
+ const checking=()=>stored()&&!sdkReady&&!sdkFailed&&supported()&&permission()!=='denied';
  const subscribed=()=>{const sub=window.OneSignal?.User?.PushSubscription;return sdkReady&&Notification.permission==='granted'&&!!sub?.optedIn&&!!sub.id&&!!sub.token};
  function waitForSubscription(sdk){
   if(subscribed())return Promise.resolve();
@@ -55,11 +56,12 @@
   const section=document.querySelector('#school-notifications');if(!section)return;
   const button=section.querySelector('[data-push-toggle]'),status=section.querySelector('[data-push-status]');if(!button)return;
   const sdk=window.OneSignal,active=subscribed();
-  button.disabled=busy;
+  const pending=checking();
+  button.disabled=busy||pending;
   button.className=active?'push-disable':'btn';
-  button.textContent=busy?(active?'Απενεργοποίηση…':'Σύνδεση…'):active?'Απενεργοποίηση':sdkReady&&Notification.permission==='default'?'Να επιτρέπονται οι ειδοποιήσεις':stored()&&!sdk?'Σύνδεση ειδοποιήσεων…':'Ενεργοποίηση ειδοποιήσεων';
+  button.textContent=busy?(active?'Απενεργοποίηση…':'Σύνδεση…'):active?'Απενεργοποίηση':pending?'Έλεγχος ειδοποιήσεων…':sdkReady&&Notification.permission==='default'?'Να επιτρέπονται οι ειδοποιήσεις':'Ενεργοποίηση ειδοποιήσεων';
   status.className=active&&!lastError?'push-active-status':'muted';
-  status.textContent=lastError||(Notification.permission==='denied'?'Οι ειδοποιήσεις είναι αποκλεισμένες. Μπορείτε να αλλάξετε την άδεια από τις ρυθμίσεις του κινητού ή του προγράμματος περιήγησης.':active?'✓ Οι ειδοποιήσεις είναι ενεργές':sdkReady&&Notification.permission==='default'?'Πατήστε για να επιτρέψετε τις ειδοποιήσεις σε αυτή τη συσκευή.':'');
+  status.textContent=lastError||(Notification.permission==='denied'?'Οι ειδοποιήσεις είναι αποκλεισμένες. Μπορείτε να αλλάξετε την άδεια από τις ρυθμίσεις του κινητού ή του προγράμματος περιήγησης.':active?'✓ Οι ειδοποιήσεις είναι ενεργές':pending?'Ελέγχουμε την κατάσταση σε αυτή τη συσκευή…':sdkReady&&Notification.permission==='default'?'Πατήστε για να επιτρέψετε τις ειδοποιήσεις σε αυτή τη συσκευή.':'');
   button.onclick=toggle;
  }
  async function toggle(){
@@ -89,11 +91,12 @@
  function paintBell(){
   const bell=document.querySelector('#school-notification-open');if(!bell)return;
   bell.hidden=!config().enabled||!config().appId;if(bell.hidden)return;
-  const active=subscribed(),pending=busy||(stored()&&!sdkReady&&!sdkFailed&&supported());
-  bell.className='bell-open'+(active?' is-active':'');
-  bell.innerHTML=bellIcon+(active?'<span class="bell-check" aria-hidden="true">✓</span>':'');
-  bell.setAttribute('aria-label',active?'Ειδοποιήσεις ενεργές':pending?'Σύνδεση ειδοποιήσεων':'Ειδοποιήσεις');
-  bell.title=active?'Οι ειδοποιήσεις είναι ενεργές':'Ειδοποιήσεις';
+  const active=subscribed(),pending=busy||checking();
+  bell.className='bell-open'+(active?' is-active':pending?' is-pending':'');
+  bell.innerHTML=bellIcon+(active?'<span class="bell-check" aria-hidden="true">✓</span>':pending?'<span class="bell-spinner" aria-hidden="true"></span>':'');
+  bell.setAttribute('aria-label',active?'Ειδοποιήσεις ενεργές':pending?'Έλεγχος ειδοποιήσεων':'Ειδοποιήσεις');
+  bell.setAttribute('aria-busy',pending&&!active?'true':'false');
+  bell.title=active?'Οι ειδοποιήσεις είναι ενεργές':pending?'Έλεγχος ειδοποιήσεων…':'Ειδοποιήσεις';
   bell.onclick=()=>{
    let dialog=document.querySelector('#school-notification-dialog');
    if(!dialog){dialog=document.createElement('dialog');dialog.id='school-notification-dialog';dialog.className='bell-dialog';dialog.setAttribute('aria-labelledby','bell-title');document.body.appendChild(dialog);
@@ -105,18 +108,19 @@
   const dialog=document.querySelector('#school-notification-dialog');if(dialog?.open)paintDialog(dialog);
  }
  function paintDialog(dialog){
-  const active=subscribed(),instructions=ios()&&!standalone(),pending=busy||(stored()&&!sdkReady&&!sdkFailed&&supported());
+  const active=subscribed(),instructions=ios()&&!standalone(),pending=busy||checking();
   const view=active?(manage?'manage':'active'):instructions?'ios':!supported()?'unsupported':permission()==='denied'?'denied':pending?'pending':sdkReady&&permission()==='default'?'permission':'inactive';
   // Keep the focused button in place while subscription events update its status.
   if(dialogView!==view){
    const hadFocus=dialog.contains(document.activeElement);dialogView=view;
-   const title=active?(manage?'Διαχείριση ειδοποιήσεων':'Οι ειδοποιήσεις σας είναι ενεργές'):'Μείνετε ενήμεροι';
+   const title=active?(manage?'Διαχείριση ειδοποιήσεων':'Οι ειδοποιήσεις σας είναι ενεργές'):pending?'Έλεγχος ειδοποιήσεων…':'Μείνετε ενήμεροι';
    let content;
    if(active)content='<p class="bell-success">✓ Ενεργές σε αυτή τη συσκευή</p>'+(manage?'<p>Θέλετε να σταματήσετε να λαμβάνετε ειδοποιήσεις σε αυτή τη συσκευή;</p><button type="button" class="btn primary" data-bell-keep>Να παραμείνουν ενεργές</button><button type="button" class="bell-manage" data-bell-toggle>Απενεργοποίηση ειδοποιήσεων</button>':'<p>Θα λαμβάνετε νέες ανακοινώσεις και υπενθυμίσεις για επιλεγμένες σημαντικές ημερομηνίες.</p><button type="button" class="btn primary" data-bell-done>Εντάξει</button><button type="button" class="bell-manage" data-bell-manage>Διαχείριση ειδοποιήσεων</button>');
    else if(instructions)content='<p>Για να λαμβάνετε ειδοποιήσεις στο iPhone, προσθέστε πρώτα την ιστοσελίδα στην οθόνη Αφετηρίας.</p><ol><li>Στο Safari, πατήστε Κοινή χρήση.</li><li>Επιλέξτε «Προσθήκη στην οθόνη Αφετηρίας».</li><li>Ανοίξτε την από το νέο εικονίδιο και πατήστε το καμπανάκι.</li></ol><button type="button" class="btn primary" data-bell-done>Εντάξει</button>';
    else if(!supported())content='<p>Οι ειδοποιήσεις δεν υποστηρίζονται σε αυτό το πρόγραμμα περιήγησης. Δοκιμάστε στο Chrome ή στο Safari από την αρχική οθόνη.</p><button type="button" class="btn primary" data-bell-done>Εντάξει</button>';
    else if(permission()==='denied')content='<p>Οι ειδοποιήσεις είναι αποκλεισμένες. Επιτρέψτε τις ειδοποιήσεις για το goneisknip.com από τις ρυθμίσεις του προγράμματος περιήγησης και ελέγξτε ότι είναι ενεργές και στις ρυθμίσεις της συσκευής.</p><button type="button" class="btn primary" data-bell-done>Εντάξει</button>';
-   else content='<p>Ενεργοποιήστε τις ειδοποιήσεις για νέες ανακοινώσεις και υπενθυμίσεις σημαντικών ημερομηνιών.</p><button type="button" class="btn primary" data-bell-toggle'+(pending?' disabled':'')+'>'+(pending?'Σύνδεση…':view==='permission'?'Να επιτρέπονται οι ειδοποιήσεις':'Ενεργοποίηση ειδοποιήσεων')+'</button><small>Προαιρετικά, μόνο σε αυτή τη συσκευή. Μπορείτε να τις απενεργοποιήσετε όποτε θέλετε.</small>';
+   else if(pending)content='<p role="status">Ελέγχουμε την κατάσταση των ειδοποιήσεων σε αυτή τη συσκευή. Περιμένετε λίγο…</p><button type="button" class="btn primary" data-bell-toggle disabled>Έλεγχος…</button>';
+   else content='<p>Ενεργοποιήστε τις ειδοποιήσεις για νέες ανακοινώσεις και υπενθυμίσεις σημαντικών ημερομηνιών.</p><button type="button" class="btn primary" data-bell-toggle>'+(view==='permission'?'Να επιτρέπονται οι ειδοποιήσεις':'Ενεργοποίηση ειδοποιήσεων')+'</button><small>Προαιρετικά, μόνο σε αυτή τη συσκευή. Μπορείτε να τις απενεργοποιήσετε όποτε θέλετε.</small>';
    dialog.innerHTML='<button type="button" class="bell-close" aria-label="Κλείσιμο">×</button><div class="bell-emblem">'+bellIcon+'</div><h2 id="bell-title">'+title+'</h2>'+content+'<p class="bell-error" data-bell-status role="status" aria-live="polite"></p>';
    dialog.querySelector('.bell-close').onclick=()=>dialog.close();
    const action=dialog.querySelector('[data-bell-toggle]');if(action)action.onclick=toggle;
@@ -129,7 +133,7 @@
   dialog.querySelector('[data-bell-status]').textContent=lastError;
  }
  window.notificationCard=card;
- window.schoolNotificationState=()=>({active:subscribed(),pending:stored()&&!sdkReady&&!sdkFailed&&supported()});
+ window.schoolNotificationState=()=>({active:subscribed(),pending:checking()});
  window.bindNotifications=paint;
  window.initNotifications=()=>{
   if(!config().enabled||!config().appId||!stored()||!supported())return;
